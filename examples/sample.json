@@ -1,0 +1,22 @@
+{
+    "action": "batch_update",
+    "requestId": "req-98765",
+    "options": {
+        "dryRun": false,
+        "timeoutMs": 3000
+    },
+    "items": [
+        {
+            "id": 101,
+            "operation": "insert",
+            "tags": ["user", "active"],
+            "payload": { "name": "Alice", "role": "admin" }
+        },
+        {
+            "id": 102,
+            "operation": "update",
+            "tags": ["guest"],
+            "payload": { "name": "Bob", "role": "viewer" }
+        }
+    ]
+}
