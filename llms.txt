@@ -1,0 +1,44 @@
+# JsonDic
+
+> A lightweight, zero-copy C++ JSON parser built with Bison.
+
+JsonDic is a minimalist C++ JSON parser designed as a simpler, zero-overhead alternative to overly complex JSON libraries. Built with GNU Bison, it transforms JSON data into a flattened hash map (`std::unordered_map`) using path keys, enabling O(1) lookup times. It references values directly from the original in-memory buffer without allocating separate string copies.
+
+- License: Apache-2.0
+- Language / Standard: C++17
+- Core Files: `jsonDic.h`, `jsonDic.yy`
+- Dependencies: GNU Bison (>= 3.0), POSIX-compliant C++ compiler
+
+## Architecture & Key Concepts
+
+- **Zero-Copy Value Referencing**: Values are stored as offsets, lengths, and types (`ofs`, `len`, `type`) pointing directly to the original JSON buffer. The original buffer (`std::string` or `mmap`) must remain in memory during `JsonDic` usage.
+- **Flattened Dictionary Lookup (O(1))**: JSON hierarchical paths are flattened into keys separated by internal delimiters (`0x1e` for objects, `0x1d` for array indices).
+- **Stack-Friendly Query Helper (`JDicKey`)**: Path keys are constructed into a user-provided local stack buffer (`char kbuf[N]`), eliminating dynamic memory allocations during search operations.
+- **Minimal Footprint**: The entire library core consists of just two files: `jsonDic.h` and `jsonDic.yy`.
+
+## Primary Components & API
+
+- `JsonDic(const char* ptr, int size)` / `JsonDic(const std::string& s)`: Core parser engine.
+  - `bool parse()`: Executes Bison parsing. Returns `true` on success, `false` on syntax error.
+  - `std::string errMsg`, `int errLine`, `int errPos`: Syntax error information.
+  - `JDicValue find(const JDicKey& path)`: Finds a value by chained path key.
+  - `std::unordered_map<std::string, jVal> dic`: The underlying dictionary mapping flattened path keys to value records.
+- `JDicKey(char* buf, int size)`: Chainable query key helper using caller-supplied buffer.
+  - `operator[](const std::string& key)`: Chains nested object keys (e.g. `root["options"]["timeout"]`).
+  - `operator[](int index)`: Chains array indices (e.g. `root["items"][0]`).
+- `JDicValue`: Query result representation.
+  - `bool exists()` / `operator bool()`: Check if key exists.
+  - `isString()`, `isInteger()`, `isReal()`, `isTrue()`, `isFalse()`, `isNull()`, `isArray()`, `isObject()`.
+  - `std::string token`: Extracted token text for primitive values.
+  - `int arraySize`: Element count when type is array.
+  - `int memberCount`: Member count when type is object.
+
+## Examples & Code References
+
+- [jsonDic.h](jsonDic.h): Public C++ header declaring `JsonDic`, `JDicKey`, and `JDicValue`.
+- [jsonDic.yy](jsonDic.yy): Bison grammar and lexical analyzer implementation.
+- [examples/ex-string.cc](examples/ex-string.cc): Example demonstrating how to parse and query a `std::string` JSON payload.
+- [examples/ex-mmap.cc](examples/ex-mmap.cc): Example demonstrating high-speed zero-copy parsing using POSIX `mmap()`.
+- [examples/ex-dump.cc](examples/ex-dump.cc): CLI tool that reads JSON from standard input, parses it, and dumps all flattened keys and values.
+- [README.md](README.md): English documentation and quickstart guide.
+- [README.ja.md](README.ja.md): Japanese documentation and quickstart guide.
