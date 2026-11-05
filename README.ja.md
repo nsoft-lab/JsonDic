@@ -1,6 +1,5 @@
 # JsonDic
 
-
 [English](README.md) | [Japanese](README.ja.md)
 
 Bison を用いて構築された、軽量でコンパクトな C++ 向け JSON パーザ＆ディクショナリです。
