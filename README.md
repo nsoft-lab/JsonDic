@@ -1,9 +1,9 @@
 # JsonDic
-[![License]([suspicious link removed])](LICENSE)
-[![C++17]([suspicious link removed])]()
-[![Bison]([suspicious link removed])]()
-[![Release]([suspicious link removed])]([suspicious link removed])
-[English](README.md) | [Japanese](README.ja.md)
+
+![License]([suspicious link removed])
+![C++17]([suspicious link removed])
+![Bison]([suspicious link removed])
+![Version]([suspicious link removed])
 
 A lightweight, minimal C++ JSON parser and dictionary built with Bison.
 
