@@ -1,10 +1,5 @@
 # JsonDic
 
-![License]([suspicious link removed])
-![C++17]([suspicious link removed])
-![Bison]([suspicious link removed])
-![Version]([suspicious link removed])
-
 A lightweight, minimal C++ JSON parser and dictionary built with Bison.
 
 **JsonDic** is designed to be straightforward, compact, and efficient. It focuses on parsing JSON structures into a flattened, path-addressable dictionary while keeping memory overhead and complexity to a minimum.
