@@ -80,7 +80,7 @@ int main() {
     }
 
     // Allocate key buffer on the stack
-    char kbuf[1024];
+    char kbuf[256];
     JDicKey root(kbuf, sizeof(kbuf));
 
     // Simple key lookup
