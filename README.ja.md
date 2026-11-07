@@ -57,35 +57,38 @@ make
 ## クイックスタート
 
 ```cpp
-#include <cstdio>
+#include <stdio.h>
 #include <string>
+using std::string;
+
 #include "jsonDic.h"
 
-int main() {
-    std::string json = R"({
-        "action": "batch_update",
-        "options": { "dryRun": false },
-        "items": [
-            { "id": 101, "name": "Alice" },
-            { "id": 102, "name": "Bob" }
-        ]
-    })";
+string json = R"(
+{
+    "action": "batch_update",
+    "options": { "dryRun": false },
+    "items": [
+        { "id": 101, "name": "Alice" },
+        { "id": 102, "name": "Bob" }
+    ]
+})";
 
+int main() {
     JsonDic jdic(json);
     if (!jdic.parse()) {
         printf("Parse error: %s (line: %d, pos: %d)\n",
-               jdic.errMsg.c_str(), jdic.errLine, jdic.errPos);
+               jdic.errMsg.data(), jdic.errLine, jdic.errPos);
         return 1;
     }
 
     // スタック上にキー用バッファを確保
-    char kbuf[1024];
+    char kbuf[256];
     JDicKey root(kbuf, sizeof(kbuf));
 
     // 単純なキー検索
     JDicValue action = jdic.find(root["action"]);
     if (action.isString()) {
-        printf("Action: %s\n", action.token.c_str());
+        printf("Action: %s\n", action.token.data());
     }
 
     // ネストしたオブジェクトの検索
@@ -101,7 +104,7 @@ int main() {
         for (int i = 0; i < items.arraySize; ++i) {
             JDicValue name = jdic.find(arr[i]["name"]);
             if (name.exists()) {
-                printf("Item %d Name: %s\n", i, name.token.c_str());
+                printf("Item %d Name: %s\n", i, name.token.data());
             }
         }
     }
